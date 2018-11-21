@@ -41,5 +41,22 @@ namespace SendGridEmailApplication.Controllers
             }
 
         }
+
+        [HttpGet]
+        [Route("api/multiemail")]
+        public async Task<HttpResponseMessage> SendDummyMailToMultipleReceipients()
+        {
+            try
+            {
+                await MultipleReceipients.SendDummyMailToMultipleReceipients();
+                var message = Request.CreateResponse(HttpStatusCode.OK);
+                return message;
+            }
+            catch (Exception ex)
+            {
+                var message = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                return message;
+            }
+        }
     }
 }
