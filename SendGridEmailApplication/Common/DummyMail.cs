@@ -1,4 +1,5 @@
-﻿using SendGrid;
+﻿using Newtonsoft.Json;
+using SendGrid;
 using SendGrid.Helpers.Mail;
 using SendGridEmailApplication.Models;
 using System;
@@ -16,39 +17,58 @@ namespace SendGridEmailApplication.Common
         {
             var apiKey = ConfigurationManager.AppSettings["SendGridApiKey"];
             var client = new SendGridClient(apiKey);
-            var msg = new SendGridMessage();
+            //var msg = new SendGridMessage();
             var from = new EmailAddress("Kaushal.Pareek@email.com", "Kaushal Pareek");
+            
+
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress("Kaushal.Pareek@email.com", "Kaushal Pareek"),
+                Subject = "Hello World from the SendGrid CSharp Library Helper!",
+                PlainTextContent = "Hello, Email from the helper [SendSingleEmailAsync]!",
+                HtmlContent = "<strong>Hello, Email from the helper! [SendSingleEmailAsync]</strong>"
+            };
+
             var tos = new List<EmailAddress>
             {
-                new EmailAddress("kaushal.pareek@happiestminds.com", "Kaushal"),
+                //new EmailAddress("kpareek2592@gmail.com", "Kaushal"),
                 new EmailAddress("surinder.kumar@happiestminds.com", "Surinder"),
                 new EmailAddress("test3@example.com", "Example User3")
             };
-            msg.AddTos(tos,0);
+            msg.AddTos(tos);
+
+            //msg.SetBccSetting(true, "kaushal.pareek@happiestminds.com");
 
             var cc_emails = new List<EmailAddress>
             {
-                new EmailAddress("surinder.kumar@happiestminds.com", "Surinder"),
+                new EmailAddress("kaushal.pareek@happiestminds.com", "Kaushal"),
                 new EmailAddress("test6@example.com", "Example User6")
             };
-            msg.AddCcs(cc_emails, 0);
+            msg.AddCcs(cc_emails);
 
+            //msg.AddBcc(new EmailAddress("snehi.raj@happiestminds.com", "Snehi Raj"));
+            //msg.AddBcc(new EmailAddress("kpareek2592@gmail.com", "Kaushal"));
             var bcc_emails = new List<EmailAddress>
             {
-                new EmailAddress("rahul.varade@happiestminds.com", "Rahul"),
-                new EmailAddress("test6@example.com", "Example User6")
+                new EmailAddress("snehi.raj@happiestminds.com", "Snehi"),
+                new EmailAddress("kpareek2592@gmail.com", "Kaushal Pareek")
             };
-            msg.AddBccs(bcc_emails,0);
 
-            msg.SetSubject("This is new subject with Setgrid");
-
-            var dynamicTemplateData = new EmailContract
+            Attachment attachment = new Attachment
             {
-                Subject = "Sending with SendGrid is Fun",
-                Body = "This is the body fo email."
+                Content = "Some base 64 encoded attachment content",
+                Filename = VirtualPathUtility.GetFileName(@"C:\Users\kaushal.pareek\source\repos\SendGridEmailApplication\SendGridEmailApplication\Data"),
+                Type =  "plain/text",
+                Disposition =  "attachment",
+                ContentId = "mytext"
             };
-            msg.SetTemplateData(dynamicTemplateData);
-            msg.SetBccSetting(true, "snehi.raj@happiestminds.com");
+
+            msg.Attachments.Add(attachment);
+            //var bitmap = fs.readFileSync(imageDir);
+            //imageBase64URL = new Buffer(bitmap).toString('base64');
+            //msg.AddBccs(bcc_emails);
+            //msg.AddAttachment()
+
 
             var subject = "Sending with SendGrid is Fun";
             var plainTextContent = "and easy to do anywhere, even with C#";
@@ -63,6 +83,7 @@ namespace SendGridEmailApplication.Common
                                                                        showAllRecipients
                                                                        );
 
+            
             var response = await client.SendEmailAsync(msg);
         }
 
