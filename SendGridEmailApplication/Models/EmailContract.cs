@@ -31,5 +31,8 @@ namespace SendGridEmailApplication.Models
         [Required]
         [Display(Name = "Body")]
         public string Body { get; set; }
+
+        [JsonProperty(PropertyName = "personalizations", IsReference = false)]
+        public List<Personalization> Personalizations { get; set; }
     }
 }

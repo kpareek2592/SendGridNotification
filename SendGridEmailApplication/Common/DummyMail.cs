@@ -5,6 +5,7 @@ using SendGridEmailApplication.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -54,16 +55,27 @@ namespace SendGridEmailApplication.Common
                 new EmailAddress("kpareek2592@gmail.com", "Kaushal Pareek")
             };
 
-            Attachment attachment = new Attachment
+            using (var fileStream = File.OpenRead(@"D:\TestData\a1.txt"))
             {
-                Content = "Some base 64 encoded attachment content",
-                Filename = VirtualPathUtility.GetFileName(@"C:\Users\kaushal.pareek\source\repos\SendGridEmailApplication\SendGridEmailApplication\Data"),
-                Type =  "plain/text",
-                Disposition =  "attachment",
-                ContentId = "mytext"
-            };
+                await msg.AddAttachmentAsync("a1.txt", fileStream);
+            }
 
-            msg.Attachments.Add(attachment);
+
+            //var bytes = File.ReadAllBytes(@"D:\TestData\a1.txt");
+            //var file = Convert.ToBase64String(bytes);
+            //msg.AddAttachment("a1.txt", file);
+
+
+            //Attachment attachment = new Attachment
+            //{
+            //    Content = "Some base 64 encoded attachment content",
+            //    Filename = VirtualPathUtility.GetFileName(@"C:\Users\kaushal.pareek\source\repos\SendGridEmailApplication\SendGridEmailApplication\Data"),
+            //    Type =  "plain/text",
+            //    Disposition =  "attachment",
+            //    ContentId = "mytext"
+            //};
+
+            //msg.Attachments.Add(attachment);
             //var bitmap = fs.readFileSync(imageDir);
             //imageBase64URL = new Buffer(bitmap).toString('base64');
             //msg.AddBccs(bcc_emails);
