@@ -60,28 +60,6 @@ namespace SendGridEmailApplication.Common
                 await msg.AddAttachmentAsync("a1.txt", fileStream);
             }
 
-
-            //var bytes = File.ReadAllBytes(@"D:\TestData\a1.txt");
-            //var file = Convert.ToBase64String(bytes);
-            //msg.AddAttachment("a1.txt", file);
-
-
-            //Attachment attachment = new Attachment
-            //{
-            //    Content = "Some base 64 encoded attachment content",
-            //    Filename = VirtualPathUtility.GetFileName(@"C:\Users\kaushal.pareek\source\repos\SendGridEmailApplication\SendGridEmailApplication\Data"),
-            //    Type =  "plain/text",
-            //    Disposition =  "attachment",
-            //    ContentId = "mytext"
-            //};
-
-            //msg.Attachments.Add(attachment);
-            //var bitmap = fs.readFileSync(imageDir);
-            //imageBase64URL = new Buffer(bitmap).toString('base64');
-            //msg.AddBccs(bcc_emails);
-            //msg.AddAttachment()
-
-
             var subject = "Sending with SendGrid is Fun";
             var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";

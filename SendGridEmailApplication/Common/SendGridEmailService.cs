@@ -1,77 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using SendGridEmailApplication.Interface;
 using SendGridEmailApplication.Models;
 
 namespace SendGridEmailApplication.Common
 {
     public class SendGridEmailService
     {
-        public static async void SendEmail(EmailContract contract)
+        public static async Task SendEmail(EmailContract contract)
         {
             try
             {
-                //var apiKey = ConfigurationManager.AppSettings["SendGridApiKey"];
                 var apikey = ConfigurationManager.AppSettings["SendGridApiKey"];
                 var client = new SendGridClient(apikey);
-                var msg = new SendGridMessage();
-
-                var emailMessage = new SendGridMessage()
+                
+                var msg = new SendGridMessage()
                 {
-                    From = new EmailAddress(contract.FromEmailAddress, contract.Alias),
+                    From = new EmailAddress(contract.From, contract.Alias),
                     Subject = contract.Subject,
-                    HtmlContent = contract.Body
+                    HtmlContent = contract.Body,
+                    PlainTextContent = "Hello, Email from the helper [SendSingleEmailAsync]!"
                 };
 
-                emailMessage.AddTo(new EmailAddress(contract.ToEmailAddress));
-                if (!string.IsNullOrWhiteSpace(contract.BccEmailAddress))
+                if (contract.ToEmailAddress != null)
                 {
-                    emailMessage.AddBcc(new EmailAddress(contract.BccEmailAddress));
+                    string[] split_To = contract.ToEmailAddress.Split(new Char[] { ',', ';' });
+
+                    var toos = new List<EmailAddress>();
+                    foreach (var toEmail in split_To)
+                    {
+                        toos.Add(new EmailAddress(toEmail));
+                    }
+                    msg.AddTos(toos);
                 }
 
-                if (!string.IsNullOrWhiteSpace(contract.CcEmailAddress))
+                if (contract.CcEmailAddress != null)
                 {
-                    emailMessage.AddCc(new EmailAddress(contract.CcEmailAddress));
+                    string[] split_Cc = contract.CcEmailAddress.Split(new Char[] { ',', ';' });
+                    var ccs = new List<EmailAddress>();
+                    foreach (var ccEmail in split_Cc)
+                    {
+                        ccs.Add(new EmailAddress(ccEmail));
+                    }
+                    msg.AddCcs(ccs); 
                 }
 
-                Response response = await client.SendEmailAsync(emailMessage);
+                if (contract.BccEmailAddress != null)
+                {
+                    string[] split_Bcc = contract.BccEmailAddress.Split(new Char[] { ',', ';' });
+                    var bccs = new List<EmailAddress>();
+                    foreach (var bccEmail in split_Bcc)
+                    {
+                        bccs.Add(new EmailAddress(bccEmail));
+                    }
+
+                    msg.AddBccs(bccs); 
+                }
+
+                using (var fileStream = File.OpenRead(@"D:\TestData\a1.txt"))
+                {
+                    await msg.AddAttachmentAsync("a1.txt", fileStream);
+                }
+
+                //Sending the email
+                var response = await client.SendEmailAsync(msg);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
         }
-
-        //private EmailResponse ProcessResponse(Response response)
-        //{
-        //    if (response.StatusCode.Equals(System.Net.HttpStatusCode.Accepted)
-        //        || response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-        //    {
-        //        return ToMailResponse(response);
-        //    }
-
-        //    //TODO check for null
-        //    var errorResponse = response.Body.ReadAsStringAsync().Result;
-
-        //    throw new EmailServiceException(response.StatusCode.ToString(), errorResponse);
-        //}
-
-        //private static EmailResponse ToMailResponse(Response response)
-        //{
-        //    if (response == null)
-        //        return null;
-
-        //    var headers = (HttpHeaders)response.Headers;
-        //    var messageId = headers.GetValues(MessageId).FirstOrDefault();
-        //    return new EmailResponse()
-        //    {
-        //        UniqueMessageId = messageId,
-        //        DateSent = DateTime.UtcNow,
-        //    };
-        //}
     }
 }
