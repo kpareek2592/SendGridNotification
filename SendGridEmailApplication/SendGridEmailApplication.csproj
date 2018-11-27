@@ -177,19 +177,19 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Common\ConcreteCreator.cs" />
     <Compile Include="Common\DummyMail.cs" />
     <Compile Include="Common\MultipleReceipients.cs" />
     <Compile Include="Common\SendGridEmailService.cs" />
     <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
-    <Compile Include="FactoryCreator\Creator.cs" />
+    <Compile Include="Factory\NotificationSenderFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Interface\IEmail.cs" />
+    <Compile Include="Interface\INotificationSender.cs" />
     <Compile Include="Models\EmailContract.cs" />
+    <Compile Include="Models\Enums\NotificationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -225,6 +225,7 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="Data\FEP_Guide_Lines.pdf" />
+    <Content Include="Data\fp_dc_setup_guide.pdf" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

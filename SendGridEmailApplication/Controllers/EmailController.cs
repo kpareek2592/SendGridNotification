@@ -1,7 +1,8 @@
 ﻿using SendGridEmailApplication.Common;
-using SendGridEmailApplication.FactoryCreator;
+using SendGridEmailApplication.Factory;
 using SendGridEmailApplication.Interface;
 using SendGridEmailApplication.Models;
+using SendGridEmailApplication.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +16,7 @@ namespace SendGridEmailApplication.Controllers
 {
     public class EmailController : ApiController
     {
-        private readonly IEmail _emailService;
-        //Creator creator = new ConcreteCreator();
-
-        //IEmail email = new SendEmailType("SendGrid");
-
-        //public EmailController(IEmail emailService)
-        //{
-        //    _emailService = emailService;
-        //}
+        INotificationSender notificationSender = null;
 
         public EmailController()
         {
@@ -31,12 +24,14 @@ namespace SendGridEmailApplication.Controllers
         }
 
         [HttpPost]
-        [Route("api/sendgrid")]
-        public async Task<HttpResponseMessage> SendEmail(EmailContract contract)
+        [Route("api/sendgrid/{notificationType}")]
+        public async Task<HttpResponseMessage> SendEmail([FromUri]NotificationType notificationType, EmailContract contract)
         {
+            NotificationSenderFactory factory = new NotificationSenderFactory();
+            this.notificationSender = factory.NotificationSender(notificationType);
             try
             {
-                await SendGridEmailService.SendEmail(contract);
+                await this.notificationSender.SendEmail(contract);
                 var message = Request.CreateResponse(HttpStatusCode.OK);
                 return message;
             }

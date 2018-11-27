@@ -12,9 +12,9 @@ using SendGridEmailApplication.Models;
 
 namespace SendGridEmailApplication.Common
 {
-    public class SendGridEmailService
+    public class SendGridEmailService : INotificationSender
     {
-        public static async Task SendEmail(EmailContract contract)
+        public async Task SendEmail(EmailContract contract)
         {
             try
             {
@@ -64,9 +64,9 @@ namespace SendGridEmailApplication.Common
                     msg.AddBccs(bccs); 
                 }
 
-                using (var fileStream = File.OpenRead(@"D:\TestData\a1.txt"))
+                using (var fileStream = File.OpenRead(@"D:\TestData\fp_dc_setup_guide.pdf"))
                 {
-                    await msg.AddAttachmentAsync("a1.txt", fileStream);
+                    await msg.AddAttachmentAsync("fp_dc_setup_guide.pdf", fileStream);
                 }
 
                 //Sending the email
