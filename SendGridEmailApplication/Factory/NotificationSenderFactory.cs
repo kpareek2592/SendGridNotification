@@ -1,23 +1,26 @@
 ﻿using SendGridEmailApplication.Common;
 using SendGridEmailApplication.Interface;
+using SendGridEmailApplication.Models;
 using SendGridEmailApplication.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace SendGridEmailApplication.Factory
 {
     public class NotificationSenderFactory
     {
-        public virtual INotificationSender NotificationSender(NotificationType notificationType)
+        //SendGridEmailService sendGridEmailService = SendGridEmailService.InstanceCreation;
+        public INotificationSender NotificationSender(NotificationType notificationType)
         {
             INotificationSender notificationSender = null;
 
             switch (notificationType)
             {
                 case NotificationType.Email:
-                    notificationSender = new SendGridEmailService();
+                    notificationSender = SendGridEmailService.InstanceCreation;
                     break;
                 case NotificationType.SMS:
                     break;

@@ -14,6 +14,41 @@ namespace SendGridEmailApplication.Common
 {
     public class SendGridEmailService : INotificationSender
     {
+        //private volatile static SendGridEmailService sendGridEmailService;
+        private static SendGridEmailService sendGridEmailService;
+        private SendGridEmailService()
+        {
+
+        }
+
+        public static SendGridEmailService InstanceCreation
+        {
+            //private static object lockingObject = new object();
+            //if(sendGridEmailService == null)
+            //    {
+            //         lock (lockingObject)
+            //         {
+            //              if(sendGridEmailService == null)
+            //              {
+            //                sendGridEmailService = new SendGridEmailService();
+            //              }
+            //         }
+            //    }
+            //return sendGridEmailService;
+            get
+            {
+                if (sendGridEmailService == null)
+                {
+                    sendGridEmailService = new SendGridEmailService();
+                }
+                return sendGridEmailService;
+            }
+        }
+
+        /// <summary>
+        /// Method to send email
+        /// </summary>
+        /// <param name="contract"></param>
         public async Task SendEmail(EmailContract contract)
         {
             try
