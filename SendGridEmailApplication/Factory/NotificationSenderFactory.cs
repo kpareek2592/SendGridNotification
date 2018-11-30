@@ -23,9 +23,8 @@ namespace SendGridEmailApplication.Factory
                     notificationSender = SendGridEmailService.InstanceCreation;
                     break;
                 case NotificationType.SMS:
-                    break;
-                case NotificationType.Push:
-                    break;
+                    notificationSender = SMSNotificationService.InstanceCreation;
+                    break;               
                 default:
                     throw new ArgumentException("Invalid notification type");
             }

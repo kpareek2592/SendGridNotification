@@ -16,25 +16,10 @@ namespace SendGridEmailApplication.Common
     {
         //private volatile static SendGridEmailService sendGridEmailService;
         private static SendGridEmailService sendGridEmailService;
-        private SendGridEmailService()
-        {
-
-        }
+        private SendGridEmailService(){ }
 
         public static SendGridEmailService InstanceCreation
-        {
-            //private static object lockingObject = new object();
-            //if(sendGridEmailService == null)
-            //    {
-            //         lock (lockingObject)
-            //         {
-            //              if(sendGridEmailService == null)
-            //              {
-            //                sendGridEmailService = new SendGridEmailService();
-            //              }
-            //         }
-            //    }
-            //return sendGridEmailService;
+        {            
             get
             {
                 if (sendGridEmailService == null)
@@ -49,13 +34,15 @@ namespace SendGridEmailApplication.Common
         /// Method to send email
         /// </summary>
         /// <param name="contract"></param>
-        public async Task SendEmail(EmailContract contract)
+        public async Task SendNotification(NotificationContract notificationcontract) 
         {
             try
             {
                 var apikey = ConfigurationManager.AppSettings["SendGridApiKey"];
                 var client = new SendGridClient(apikey);
-                
+
+                EmailContract contract = (EmailContract)notificationcontract;
+
                 var msg = new SendGridMessage()
                 {
                     From = new EmailAddress(contract.From, contract.Alias),
@@ -99,10 +86,10 @@ namespace SendGridEmailApplication.Common
                     msg.AddBccs(bccs); 
                 }
 
-                using (var fileStream = File.OpenRead(@"D:\TestData\fp_dc_setup_guide.pdf"))
-                {
-                    await msg.AddAttachmentAsync("fp_dc_setup_guide.pdf", fileStream);
-                }
+                //using (var fileStream = File.OpenRead(@"D:\TestData\fp_dc_setup_guide.pdf"))
+                //{
+                //    await msg.AddAttachmentAsync("fp_dc_setup_guide.pdf", fileStream);
+                //}
 
                 //Sending the email
                 var response = await client.SendEmailAsync(msg);

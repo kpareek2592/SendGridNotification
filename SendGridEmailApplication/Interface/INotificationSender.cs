@@ -9,6 +9,6 @@ namespace SendGridEmailApplication.Interface
 {
     public interface INotificationSender
     {
-        Task SendEmail(EmailContract contract);
+        Task SendNotification(NotificationContract contract); 
     }
 }

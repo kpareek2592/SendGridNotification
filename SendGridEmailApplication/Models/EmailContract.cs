@@ -2,16 +2,19 @@
 
 namespace SendGridEmailApplication.Models
 {
-    public class EmailContract
+    public class NotificationContract
     {
         [JsonProperty("from", Order = 1)]
         public string From { get; set; }
 
-        [JsonProperty("subject", Order = 2)]
-        public string Subject { get; set; }
-
         [JsonProperty("body", Order = 3)]
         public string Body { get; set; }
+    }
+    public class EmailContract: NotificationContract
+    {       
+
+        [JsonProperty("subject", Order = 2)]
+        public string Subject { get; set; }       
 
         public string Alias { get; set; }
 
@@ -23,5 +26,11 @@ namespace SendGridEmailApplication.Models
 
         [JsonProperty("bccs", Order = 6)]
         public string BccEmailAddress { get; set; }
+    }
+
+    public class SMSContract : NotificationContract 
+    {      
+        [JsonProperty("to", Order = 4)]
+        public string ToPhoneNumber { get; set; }        
     }
 }
