@@ -13,7 +13,7 @@ using Twilio.Types;
 
 namespace SendGridEmailApplication.Common
 {
-    public class SMSNotificationService: INotificationSender
+    public class SMSNotificationService: ISmsSender
     {
         //private volatile static SendGridEmailService sendGridEmailService;
         private static SMSNotificationService m_smsNotificationService; 
@@ -35,7 +35,7 @@ namespace SendGridEmailApplication.Common
         /// Method to send email
         /// </summary>
         /// <param name="contract"></param>
-        public async Task SendNotification(NotificationContract notificationcontract)
+        public async Task SendSms(SmsContract contract)
         {
             // Use your account SID and authentication token instead
             // of the placeholders shown here.

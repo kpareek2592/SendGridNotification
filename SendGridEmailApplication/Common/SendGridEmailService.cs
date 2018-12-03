@@ -12,7 +12,7 @@ using SendGridEmailApplication.Models;
 
 namespace SendGridEmailApplication.Common
 {
-    public class SendGridEmailService : INotificationSender
+    public class SendGridEmailService : IEmailSender
     {
         //private volatile static SendGridEmailService sendGridEmailService;
         private static SendGridEmailService sendGridEmailService;
@@ -34,14 +34,14 @@ namespace SendGridEmailApplication.Common
         /// Method to send email
         /// </summary>
         /// <param name="contract"></param>
-        public async Task SendNotification(NotificationContract notificationcontract) 
+        public async Task SendEmail(EmailContract contract) 
         {
             try
             {
                 var apikey = ConfigurationManager.AppSettings["SendGridApiKey"];
                 var client = new SendGridClient(apikey);
 
-                EmailContract contract = (EmailContract)notificationcontract;
+                //EmailContract contract = (EmailContract)notificationcontract;
 
                 var msg = new SendGridMessage()
                 {

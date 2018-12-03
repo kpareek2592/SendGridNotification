@@ -7,8 +7,8 @@ using System.Web;
 
 namespace SendGridEmailApplication.Interface
 {
-    public interface INotificationSender
+    public interface ISmsSender
     {
-        Task SendEmail(EmailContract contract); 
+        Task SendSms(SmsContract contract); 
     }
 }

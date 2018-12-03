@@ -197,12 +197,20 @@
     <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Factory\SmsSenderFactory.cs" />
+    <Compile Include="Factory\EmailSenderFactory.cs" />
     <Compile Include="Factory\NotificationSenderFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interface\ISmsSender.cs" />
+    <Compile Include="Interface\IEmailSender.cs" />
     <Compile Include="Interface\INotificationSender.cs" />
+    <Compile Include="Models\SmsContract.cs" />
     <Compile Include="Models\EmailContract.cs" />
+    <Compile Include="Models\NotificationContract.cs" />
+    <Compile Include="Models\Enums\SmsProviders.cs" />
+    <Compile Include="Models\Enums\EmailProviders.cs" />
     <Compile Include="Models\Enums\NotificationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

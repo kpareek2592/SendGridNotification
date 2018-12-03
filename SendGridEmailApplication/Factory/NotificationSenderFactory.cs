@@ -17,17 +17,17 @@ namespace SendGridEmailApplication.Factory
         {
             INotificationSender notificationSender = null;
 
-            switch (notificationType)
-            {
-                case NotificationType.Email:
-                    notificationSender = SendGridEmailService.InstanceCreation;
-                    break;
-                case NotificationType.SMS:
-                    notificationSender = SMSNotificationService.InstanceCreation;
-                    break;               
-                default:
-                    throw new ArgumentException("Invalid notification type");
-            }
+            //switch (notificationType)
+            //{
+            //    case NotificationType.Email:
+            //        notificationSender = SendGridEmailService.InstanceCreation;
+            //        break;
+            //    case NotificationType.SMS:
+            //        notificationSender = SMSNotificationService.InstanceCreation;
+            //        break;               
+            //    default:
+            //        throw new ArgumentException("Invalid notification type");
+            //}
 
             return notificationSender;
         }
