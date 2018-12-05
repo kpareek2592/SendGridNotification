@@ -86,10 +86,17 @@ namespace SendGridEmailApplication.Common
                     msg.AddBccs(bccs); 
                 }
 
-                //using (var fileStream = File.OpenRead(@"D:\TestData\fp_dc_setup_guide.pdf"))
-                //{
-                //    await msg.AddAttachmentAsync("fp_dc_setup_guide.pdf", fileStream);
-                //}
+                string filepath = AppDomain.CurrentDomain.BaseDirectory;
+
+                //string[] files = Directory.GetFiles(@"C:\Users\kaushal.pareek\source\repos\NewRepo\SendGridEmailApplication\App_Data\");
+                string[] files = Directory.GetFiles(filepath + @"\App_Data\");
+                foreach (string file in files)
+                {
+                    using (var fileStream = File.OpenRead(filepath + @"\App_Data\" + Path.GetFileName(file)))
+                    {
+                        await msg.AddAttachmentAsync(Path.GetFileName(file), fileStream);
+                    }
+                }
 
                 //Sending the email
                 var response = await client.SendEmailAsync(msg);

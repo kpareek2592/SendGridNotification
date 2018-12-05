@@ -1,27 +1,45 @@
-﻿using SendGrid;
-using SendGrid.Helpers.Mail;
-using SendGridEmailApplication.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using SendGridEmailApplication.Interface;
+using SendGridEmailApplication.Models;
 
 namespace SendGridEmailApplication.Common
 {
-    public class MultipleReceipients
+    public class AttachmentEmail
     {
-        public static async Task SendEmail(string data, string content)
+        //private volatile static SendGridEmailService sendGridEmailService;
+        private static AttachmentEmail attachmentEmailService;
+        //private AttachmentEmail(){ }
+
+        public static AttachmentEmail InstanceCreation
+        {            
+            get
+            {
+                if (attachmentEmailService == null)
+                {
+                    attachmentEmailService = new AttachmentEmail();
+                }
+                return attachmentEmailService;
+            }
+        }
+
+        /// <summary>
+        /// Method to send email
+        /// </summary>
+        /// <param name="contract"></param>
+        public async Task AttachEmail(EmailContract contract) 
         {
-            var contract = new EmailContract();
             try
             {
                 var apikey = ConfigurationManager.AppSettings["SendGridApiKey"];
                 var client = new SendGridClient(apikey);
-
-                //EmailContract contract = (EmailContract)notificationcontract;
 
                 var msg = new SendGridMessage()
                 {
@@ -51,7 +69,7 @@ namespace SendGridEmailApplication.Common
                     {
                         ccs.Add(new EmailAddress(ccEmail));
                     }
-                    msg.AddCcs(ccs);
+                    msg.AddCcs(ccs); 
                 }
 
                 if (contract.BccEmailAddress != null)
@@ -63,12 +81,19 @@ namespace SendGridEmailApplication.Common
                         bccs.Add(new EmailAddress(bccEmail));
                     }
 
-                    msg.AddBccs(bccs);
+                    msg.AddBccs(bccs); 
                 }
 
-                using (var fileStream = File.OpenRead(@"D:\TestData\fp_dc_setup_guide.pdf"))
+
+                string filepath = AppDomain.CurrentDomain.BaseDirectory;
+                //string[] files = Directory.GetFiles(@"C:\Users\kaushal.pareek\source\repos\NewRepo\SendGridEmailApplication\App_Data\");
+                string[] files = Directory.GetFiles(filepath+@"\App_Data\");
+                foreach (string file in files)
                 {
-                    await msg.AddAttachmentAsync("fp_dc_setup_guide.pdf", fileStream);
+                    using (var fileStream = File.OpenRead(filepath + @"\App_Data\" + Path.GetFileName(file)))
+                    {
+                        await msg.AddAttachmentAsync(Path.GetFileName(file), fileStream);
+                    }
                 }
 
                 //Sending the email
@@ -77,6 +102,14 @@ namespace SendGridEmailApplication.Common
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                string filepath = AppDomain.CurrentDomain.BaseDirectory;
+                //string[] fileNames = Directory.GetFiles(filepath + @"\App_Data\");
+                //foreach (string fileName in fileNames)
+                //    File.Delete(fileName);
+                Array.ForEach(Directory.GetFiles(filepath + @"\App_Data\"), File.Delete);
             }
         }
     }

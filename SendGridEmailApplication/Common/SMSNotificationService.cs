@@ -2,6 +2,7 @@
 using SendGridEmailApplication.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -39,8 +40,11 @@ namespace SendGridEmailApplication.Common
         {
             // Use your account SID and authentication token instead
             // of the placeholders shown here.
-            const string accountSID = "ACdfa7c77b34b80936d3f9511d0ac02777";
-            const string authToken = "d1c44577391070452d84adc85011351c";
+            //const string accountSID = "ACdfa7c77b34b80936d3f9511d0ac02777";
+            //const string authToken = "d1c44577391070452d84adc85011351c";
+
+            var accountSID = ConfigurationManager.AppSettings["accountSID"];
+            var authToken = ConfigurationManager.AppSettings["authToken"];
 
             // Initialize the TwilioClient.
             TwilioClient.Init(accountSID, authToken);
@@ -48,24 +52,22 @@ namespace SendGridEmailApplication.Common
 
             try
             {
-                // Use the Twilio-provided site for the TwiML response.
-                //var url = "http://twimlets.com/message";
-                //url = $"{url}?Message%5B0%5D=Hello%20World";
-
-                //// Set the call From, To, and URL values to use for the call.
-                //// This sample uses the sandbox number provided by
-                //// Twilio to make the call.
-                //var call = CallResource.Create(
-                //    to: new PhoneNumber("+919529625298"),
-                //    from: new PhoneNumber("+13022020271"),
-                //    url: new Uri(url));
-
                 // Send an SMS message.
-                var message = MessageResource.Create(
-                    to: new PhoneNumber("+919529625298"),
-                    //to: new PhoneNumber("+919343538518"),
-                    from: new PhoneNumber("+13022020271"),
-                    body: "This is my SMS message.");
+                //var message = MessageResource.Create(
+                //    to: new PhoneNumber("+919529625298"),
+                //    //to: new PhoneNumber("+919343538518"),
+                //    from: new PhoneNumber("+13022020271"),
+                //    body: "This is my SMS message.");
+
+                var tos = new List<PhoneNumber>();
+                var split_To = contract.ToPhoneNumber.Split(',', ';');
+                foreach (var to in split_To)
+                {
+                    MessageResource.Create(
+                    to: new PhoneNumber(to),
+                    from: new PhoneNumber(contract.From),
+                    body: contract.Body);
+                }
             }
             catch (TwilioException ex)
             {

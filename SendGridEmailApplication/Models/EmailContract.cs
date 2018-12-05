@@ -23,5 +23,8 @@ namespace SendGridEmailApplication.Models
 
         [JsonProperty("bccs", Order = 6)]
         public string BccEmailAddress { get; set; }
+
+        [JsonProperty("attachment", Order = 6)]
+        public string Attachment { get; set; }
     }
 }

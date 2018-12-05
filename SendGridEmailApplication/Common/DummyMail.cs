@@ -14,7 +14,7 @@ namespace SendGridEmailApplication.Common
 {
     public class DummyMail
     {
-        public static async Task SendDummyMail()
+        public static async Task SendDummyMail(EmailContract contract)
         {
             var apiKey = ConfigurationManager.AppSettings["SendGridApiKey"];
             var client = new SendGridClient(apiKey);
