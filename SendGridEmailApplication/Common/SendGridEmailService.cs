@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using SendGridEmailApplication.Interface;
@@ -18,6 +16,9 @@ namespace SendGridEmailApplication.Common
         private static SendGridEmailService sendGridEmailService;
         private SendGridEmailService(){ }
 
+        /// <summary>
+        /// Singleton instance creation
+        /// </summary>
         public static SendGridEmailService InstanceCreation
         {            
             get
@@ -31,7 +32,7 @@ namespace SendGridEmailApplication.Common
         }
 
         /// <summary>
-        /// Method to send email
+        /// Method to send email using SendGrid
         /// </summary>
         /// <param name="contract"></param>
         public async Task SendEmail(EmailContract contract) 
@@ -40,8 +41,6 @@ namespace SendGridEmailApplication.Common
             {
                 var apikey = ConfigurationManager.AppSettings["SendGridApiKey"];
                 var client = new SendGridClient(apikey);
-
-                //EmailContract contract = (EmailContract)notificationcontract;
 
                 var msg = new SendGridMessage()
                 {
@@ -104,6 +103,12 @@ namespace SendGridEmailApplication.Common
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                //Removing the file from location
+                string filepath = AppDomain.CurrentDomain.BaseDirectory;
+                Array.ForEach(Directory.GetFiles(filepath + @"\App_Data\"), File.Delete);
             }
         }
     }
