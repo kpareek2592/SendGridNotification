@@ -25,7 +25,7 @@ namespace SendGridEmailApplication.Common
 
                 var msg = new SendGridMessage()
                 {
-                    From = new EmailAddress(contract.From, contract.Alias),
+                    From = new EmailAddress(contract.From),
                     Subject = contract.Subject,
                     HtmlContent = contract.Body,
                     PlainTextContent = "Hello, Email from the helper [SendSingleEmailAsync]!"

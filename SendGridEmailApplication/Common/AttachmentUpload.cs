@@ -12,10 +12,19 @@ namespace SendGridEmailApplication.Common
     /// </summary>
     public class AttachmentUpload
     {
+        /// <summary>
+        /// Method to upload the attachment file to a local storage
+        /// </summary>
+        /// <param name="httpRequest"></param>
         public static void UploadAttachment(HttpRequest httpRequest)
         {
             try
             {
+                long contentSize = httpRequest.ContentLength;
+                if (contentSize > 16777216)
+                {
+                    throw new Exception("File is too big");
+                }
                 if (httpRequest.Files.Count > 0)
                 {
                     var docfiles = new List<string>();
@@ -34,9 +43,7 @@ namespace SendGridEmailApplication.Common
             }
             catch (Exception)
             {
-                //var message = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
-                //return message;
-
+                throw new Exception("File is too big");
             }
         }
 
@@ -61,7 +68,6 @@ namespace SendGridEmailApplication.Common
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

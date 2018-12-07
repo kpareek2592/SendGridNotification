@@ -1,14 +1,10 @@
-﻿using Microsoft.Ajax.Utilities;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
 using SendGridEmailApplication.Common;
 using SendGridEmailApplication.Factory;
 using SendGridEmailApplication.Interface;
 using SendGridEmailApplication.Models;
 using SendGridEmailApplication.Models.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -114,34 +110,21 @@ namespace SendGridEmailApplication.Controllers
         /// </summary>
         /// <returns>HttpResponseMessage</returns>
         [HttpPost]
-        [Route("api/sendmail")]
-        public async Task<HttpResponseMessage> SendEmail()
+        [Route("api/sendmail/{provider}")]
+        public async Task<HttpResponseMessage> SendEmail([FromUri]EmailProviders provider)
         {
             AttachmentEmail email = new AttachmentEmail();
+            emailSender = null;
+            emailSender = emailSenderFactory.EmailSender(provider);
 
             var httpRequest = HttpContext.Current.Request;
             var stringContract = HttpContext.Current.Request.Params["content"];
             EmailContract contract = JsonConvert.DeserializeObject<EmailContract>(stringContract);
 
-            //try
-            //{
-            //    List<HttpPostedFile> files = (List<HttpPostedFile>)context.Cache[context.Request.Params["files"]];
-
-            //    HttpPostedFile postedFile = context.Request.Files["Filedata"];
-            //    files.Add(postedFile);
-            //    string filename = postedFile.FileName;
-            //    context.Response.Write(filename);
-            //    context.Response.StatusCode = 200;
-
-            //    await email.AttachEmail(filespath, contract);
-            //    var message = Request.CreateResponse(HttpStatusCode.OK);
-            //    return message;
-            //}
-
             try
             {
                 AttachmentUpload.UploadAttachment(httpRequest);
-                await email.AttachEmail(contract);
+                await emailSender.SendEmail(contract);
                 var message = Request.CreateResponse(HttpStatusCode.OK);
                 return message;
             }
