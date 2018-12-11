@@ -10,6 +10,9 @@ using SendGridEmailApplication.Models;
 
 namespace SendGridEmailApplication.Common
 {
+    /// <summary>
+    /// Service to send email using SendGrid
+    /// </summary>
     public class SendGridEmailService : IEmailSender
     {
         //private volatile static SendGridEmailService sendGridEmailService;

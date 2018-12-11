@@ -1,13 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NUnit.Framework;
 using SendGridEmailApplication.Controllers;
 using SendGridEmailApplication.Interface;
 using SendGridEmailApplication.Models;
 using SendGridEmailApplication.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SendGridEmailApplication.Tests.Controllers
@@ -29,21 +27,41 @@ namespace SendGridEmailApplication.Tests.Controllers
             _notificationSender = new Mock<INotificationSender>();
         }
 
-        //[TestMethod]
-        //public void SendEmail_Test1()
-        //{
-        //    //Arrange
-        //    //var _mockController = new Mock<NotificationController> { CallBase = true };
+        [TestCase(EmailProviders.SendGrid)]
+        public void SendEmail_Test1(EmailProviders providers)
+        {
+            //Arrange
+            var _mockController = new NotificationController();
+            
+            //var _controller = _mockController.Object;
+            _controller.Setup(x => x.SendEmail(providers)).Returns(GetResponse());
 
-        //    //var _controller = _mockController.Object;
-        //    _controller.Setup(x => x.SendEmail()).Returns(new Delegate);
+
+            //Act
+            var result = _mockController.SendEmail(providers);
+
+            //Assert
+            NUnit.Framework.Assert.IsNotNull(result);
+        }
+
+        [TestCase(SmsProviders.Twillio)]
+        public void SendSms_Test1(SmsProviders providers)
+        {
+            //Arrange
+            var _mockController = new NotificationController();
+
+            var smsContract = GetSmsContract();
+
+            //var _controller = _mockController.Object;
+            _controller.Setup(x => x.SendSms(providers, smsContract)).Returns(GetResponse());
 
 
-        //    //Act
-        //    _mockController.sen
+            //Act
+            var result = _mockController.SendSms(providers, smsContract);
 
-        //    Assert
-        //}
+            //Assert
+            NUnit.Framework.Assert.IsNotNull(result);
+        }
 
         //[TestMethod]
         //public void SendEmail_Test2()
@@ -74,6 +92,21 @@ namespace SendGridEmailApplication.Tests.Controllers
               CcEmailAddress = "kpareek2592@gmail.com;test6@example.com",
               BccEmailAddress = "snehi.raj@happiestminds.com,kaushal.pareek@happiestminds.com"
             };
+        }
+
+        private SmsContract GetSmsContract()
+        {
+            return new SmsContract()
+            {
+                From = "123456789",
+                Body = "This is a test sms sent via twilio",
+                ToPhoneNumber = "1234567"
+            };
+        }
+
+        private Task<HttpResponseMessage> GetResponse()
+        {
+            return Task.FromResult(new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.OK });
         }
 
         private EmailProviders GetEmailProviders()
